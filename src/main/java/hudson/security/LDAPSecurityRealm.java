@@ -835,10 +835,12 @@ public class LDAPSecurityRealm extends AbstractPasswordBasedSecurityRealm {
             for (GrantedAuthority ga : names) {
                 String role = ga.getAuthority();
 
-                // backward compatible name mangling
-                if (convertToUpperCase)
-                    role = role.toUpperCase();
-                r.add(new GrantedAuthorityImpl(rolePrefix + role));
+                if (!"true".equals(System.getProperty(LDAPSecurityRealm.class.getName()+".disablePrefixedRoles", "false"))) {
+                    // backward compatible name mangling
+                    if (convertToUpperCase)
+                        role = role.toUpperCase();
+                    r.add(new GrantedAuthorityImpl(rolePrefix + role));
+                }
             }
 
             return r;
